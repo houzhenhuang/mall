@@ -42,13 +42,13 @@ export default {
 </script>
 
 <style scoped>
-.tab-bar-item {
-  flex: 1;
+  .tab-bar-item {
+    flex: 1;
 
-  text-align: center;
-}
-.tab-bar-item img {
-  width: 24px;
-  height: 24px;
-}
+    text-align: center;
+  }
+  .tab-bar-item img {
+    width: 24px;
+    height: 24px;
+  }
 </style>
