@@ -1,16 +1,42 @@
 <template>
-  <div>
+  <div id="home">
     <nav-bar class="home-nav"><div slot="center">购物街</div></nav-bar>
     <home-banner :banners="banners"></home-banner>
     <recommend-view :recommends="recommends"></recommend-view>
+    <feature-view />
+    <tab-control
+      class="tab-control"
+      :titles="['流行', '新款', '精选']"
+      @tabClick="tabClick"
+    />
+    <goods-list :goods="showGoods" />
   </div>
 </template>
 <script>
 import NavBar from "components/common/navbar/NavBar";
+import GoodsList from "components/content/goods/GoodsList";
+
+import TabControl from "components/content/tabControl/TabControl";
+
 import HomeBanner from "./childComps/HomeBanner";
 import RecommendView from "./childComps/RecommendView";
+import FeatureView from "./childComps/FeatureView";
+
 export default {
   name: "Home",
+  components: {
+    NavBar,
+    HomeBanner,
+    RecommendView,
+    FeatureView,
+    TabControl,
+    GoodsList,
+  },
+  computed: {
+    showGoods() {
+      return this.goods[this.currentType].list;
+    },
+  },
   data() {
     return {
       banners: [
@@ -61,18 +87,162 @@ export default {
           title: "初秋上新",
         },
       ],
+      goods: {
+        pop: {
+          page: 1,
+          list: [
+            {
+              title:
+                "新款打底裤女裤外穿显瘦高腰紧身黑色九分小脚铅笔春秋冬加绒加厚",
+              show: {
+                img: "https://s5.mogucdn.com/mlcdn/c45406/190514_2jch323fl930l74l307c3gg6kh00b_640x960.jpg_640x854.v1cAC.40.webp",
+              },
+              cfav: 3573,
+              price: 39.9,
+            },
+            {
+              title:
+                "ins侃爷同款黑武士灰白椰子鞋复古情侣厚底老爹鞋运动男女跑鞋",
+              show: {
+                img: "https://s5.mogucdn.com/mlcdn/c45406/210724_3253hkfj2jhj76fkg7dll9h6ai1k0_640x960.jpg_640x854.v1cAC.40.webp",
+              },
+              cfav: 9,
+              price: 188,
+            },
+            {
+              title: "秋冬新款轻熟女人味套装小香风针织毛衣阔腿裤两件套时尚洋气",
+              show: {
+                img: "https://s5.mogucdn.com/mlcdn/55cf19/210817_7bk7ejcjj5cl806dhj46ab07786bl_640x960.jpg_640x854.v1cAC.40.webp",
+              },
+              cfav: 50,
+              price: 184.29,
+            },
+            {
+              title:
+                "秋冬加绒加厚新款打底裤女外穿显瘦高腰保暖棉裤子黑色小脚魔术裤",
+              show: {
+                img: "https://s5.mogucdn.com/mlcdn/c45406/210810_10281h12eiegei25248ekg416b2e7_640x960.jpg_640x854.v1cAC.40.webp",
+              },
+              cfav: 249,
+              price: 39.8,
+            },
+          ],
+        },
+        new: {
+          page: 1,
+          list: [
+            {
+              title: "高跟方头小短靴女2021秋冬季新款马丁靴法式瘦瘦靴薄款粗跟单",
+              show: {
+                img: "https://s5.mogucdn.com/mlcdn/55cf19/211009_7bfhc28771klle14f35c13cl0df1h_640x960.jpg_640x854.v1cAC.40.webp",
+              },
+              cfav: 37,
+              price: 129,
+            },
+            {
+              title: "2021新款木耳边高领亮丝针织连衣裙女冬装性感修身包臀裙",
+              show: {
+                img: "https://s5.mogucdn.com/mlcdn/c45406/201206_1f5hgd02k2g042f3ck6k8aj6dei5h_749x1000.jpg_640x854.v1cAC.40.webp",
+              },
+              cfav: 13,
+              price: 89.67,
+            },
+            {
+              title:
+                "中国风红色卫衣加绒加厚中长款连帽上衣女冬洋气时尚百搭大码外套",
+              show: {
+                img: "https://s5.mogucdn.com/mlcdn/55cf19/211218_24ch2123fi5acjidd1kj5ccf04ejk_640x960.jpg_640x854.v1cAC.40.webp",
+              },
+              cfav: 42,
+              price: 89,
+            },
+            {
+              title:
+                "大码女装冬季套装女新款遮肉显瘦加厚连帽卫衣外套工装裤两件套",
+              show: {
+                img: "https://s5.mogucdn.com/mlcdn/c45406/211124_7481kgh75ck0b2ek727205a54jd65_640x960.png_640x854.v1cAC.40.webp",
+              },
+              cfav: 187,
+              price: 59.92,
+            },
+          ],
+        },
+        sell: {
+          page: 1,
+          list: [
+            {
+              title:
+                "雪尼尔加绒阔腿裤女秋冬新款百搭宽松高腰垂感休闲直筒灯芯绒裤",
+              show: {
+                img: "https://s5.mogucdn.com/mlcdn/c45406/211124_0ecg0kjca25911gff4ibh5gg81j50_640x960.jpg_640x854.v1cAC.40.webp",
+              },
+              cfav: 11,
+              price: 79.8,
+            },
+            {
+              title: "西装裤女2021秋冬新款高腰宽松显瘦微喇叭裤黑色垂感休闲长裤",
+              show: {
+                img: "https://s5.mogucdn.com/mlcdn/55cf19/210925_0ccj324gillh7j6jcfg3af795ij6a_640x960.jpg_640x854.v1cAC.40.webp",
+              },
+              cfav: 33,
+              price: 59,
+            },
+            {
+              title: "加绒运动裤女春秋2021新款韩版宽松哈伦裤显瘦束脚卫裤休闲女",
+              show: {
+                img: "https://s5.mogucdn.com/mlcdn/55cf19/211011_47c749ib3i8d05ba4ffj88l952i74_640x960.jpg_640x854.v1cAC.40.webp",
+              },
+              cfav: 24,
+              price: 69,
+            },
+            {
+              title:
+                "秋冬季新款复古英伦风感粗花呢料小香西装外套女韩版小众西服上衣",
+              show: {
+                img: "https://s5.mogucdn.com/mlcdn/c45406/211002_0klib95dkd8a982501226cl9kdgkc_640x960.jpg_640x854.v1cAC.40.webp",
+              },
+              cfav: 10,
+              price: 119.8,
+            },
+          ],
+        },
+      },
+      currentType: "pop",
     };
   },
-  components: {
-    NavBar,
-    HomeBanner,
-    RecommendView,
+  methods: {
+    tabClick(index) {
+      switch (index) {
+        case 0:
+          this.currentType = "pop";
+          break;
+        case 1:
+          this.currentType = "new";
+          break;
+        case 2:
+          this.currentType = "sell";
+          break;
+      }
+    },
   },
 };
 </script>
 <style scoped>
-.home-nav{
+#home {
+  padding-top: 44px;
+  position: relative;
+}
+.home-nav {
   background-color: var(--color-tint);
   color: #fff;
+
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+}
+.tab-control {
+  position: sticky;
+  top: 44px;
 }
 </style>
