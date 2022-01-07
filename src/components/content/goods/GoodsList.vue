@@ -22,6 +22,7 @@ export default {
     },
   },
   components: { GoodsListItem },
+  methods: {},
 };
 </script>
 
@@ -30,7 +31,5 @@ export default {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
-
-  padding-bottom: 150px;
 }
 </style>

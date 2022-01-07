@@ -1,26 +1,35 @@
 <template>
   <div id="home">
     <nav-bar class="home-nav"><div slot="center">购物街</div></nav-bar>
-    <home-banner :banners="banners"></home-banner>
-    <recommend-view :recommends="recommends"></recommend-view>
-    <feature-view />
-    <tab-control
-      class="tab-control"
-      :titles="['流行', '新款', '精选']"
-      @tabClick="tabClick"
-    />
-    <goods-list :goods="showGoods" />
+    <scroll
+      ref="scroll"
+      :probeType="3"
+      @scroll="scroll"
+      :pull-up-load="true"
+      @pullingUp="loadMore"
+    >
+      <home-banner :banners="banners"></home-banner>
+      <recommend-view :recommends="recommends"></recommend-view>
+      <feature-view />
+      <tab-control :titles="['流行', '新款', '精选']" @tabClick="tabClick" />
+      <goods-list :goods="showGoods" />
+    </scroll>
+    <back-top @click.native="backTop" v-show="isShowBackTop" />
   </div>
 </template>
 <script>
 import NavBar from "components/common/navbar/NavBar";
-import GoodsList from "components/content/goods/GoodsList";
+import Scroll from "components/common/scroll/Scroll";
 
+import GoodsList from "components/content/goods/GoodsList";
 import TabControl from "components/content/tabControl/TabControl";
+import BackTop from "components/content/backTop/BackTop";
 
 import HomeBanner from "./childComps/HomeBanner";
 import RecommendView from "./childComps/RecommendView";
 import FeatureView from "./childComps/FeatureView";
+
+import { debounce } from "common/utils";
 
 export default {
   name: "Home",
@@ -31,6 +40,8 @@ export default {
     FeatureView,
     TabControl,
     GoodsList,
+    Scroll,
+    BackTop,
   },
   computed: {
     showGoods() {
@@ -126,6 +137,40 @@ export default {
               cfav: 249,
               price: 39.8,
             },
+            {
+              title:
+                "雪尼尔加绒阔腿裤女秋冬新款百搭宽松高腰垂感休闲直筒灯芯绒裤",
+              show: {
+                img: "https://s5.mogucdn.com/mlcdn/c45406/211124_0ecg0kjca25911gff4ibh5gg81j50_640x960.jpg_640x854.v1cAC.40.webp",
+              },
+              cfav: 11,
+              price: 79.8,
+            },
+            {
+              title: "西装裤女2021秋冬新款高腰宽松显瘦微喇叭裤黑色垂感休闲长裤",
+              show: {
+                img: "https://s5.mogucdn.com/mlcdn/55cf19/210925_0ccj324gillh7j6jcfg3af795ij6a_640x960.jpg_640x854.v1cAC.40.webp",
+              },
+              cfav: 33,
+              price: 59,
+            },
+            {
+              title: "加绒运动裤女春秋2021新款韩版宽松哈伦裤显瘦束脚卫裤休闲女",
+              show: {
+                img: "https://s5.mogucdn.com/mlcdn/55cf19/211011_47c749ib3i8d05ba4ffj88l952i74_640x960.jpg_640x854.v1cAC.40.webp",
+              },
+              cfav: 24,
+              price: 69,
+            },
+            {
+              title:
+                "秋冬季新款复古英伦风感粗花呢料小香西装外套女韩版小众西服上衣",
+              show: {
+                img: "https://s5.mogucdn.com/mlcdn/c45406/211002_0klib95dkd8a982501226cl9kdgkc_640x960.jpg_640x854.v1cAC.40.webp",
+              },
+              cfav: 10,
+              price: 119.8,
+            },
           ],
         },
         new: {
@@ -208,7 +253,14 @@ export default {
         },
       },
       currentType: "pop",
+      isShowBackTop: false,
     };
+  },
+  mounted() {
+    const refresh = debounce(this.$refs.scroll.refresh, 50);
+    this.$bus.$on("itemImageLoad", () => {
+      refresh();
+    });
   },
   methods: {
     tabClick(index) {
@@ -223,14 +275,29 @@ export default {
           this.currentType = "sell";
           break;
       }
+
+      this.$refs.scroll.bsScroll.refresh();
+    },
+    backTop() {
+      this.$refs.scroll.scrollTo(0, 0);
+    },
+    scroll(position) {
+      this.isShowBackTop = -position.y > 655;
+    },
+    loadMore() {
+      console.log("上拉加载更多");
+      setTimeout(() => {
+        this.$refs.scroll && this.$refs.scroll.finishPullUp();
+      }, 2000);
     },
   },
 };
 </script>
 <style scoped>
 #home {
-  padding-top: 44px;
+  /* padding-top: 44px; */
   position: relative;
+  height: 100vh;
 }
 .home-nav {
   background-color: var(--color-tint);
@@ -244,5 +311,15 @@ export default {
 .tab-control {
   position: sticky;
   top: 44px;
+}
+
+.wrapper {
+  overflow: hidden;
+
+  position: absolute;
+  top: 44px;
+  bottom: 49px;
+  left: 0;
+  right: 0;
 }
 </style>
